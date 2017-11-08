@@ -71,3 +71,14 @@ Output should look like so:
 - xC0000 - BIOS - 256KB
 - x100000 and on- Free
 
+# References
+
+**Doc**
+
+www.cs.bham.ac.uk/~exr/lectures/opsys/10_11/lectures/os-dev.pdf
+
+
+**x86 op codes**
+
+http://ref.x86asm.net/coder32.html
+
