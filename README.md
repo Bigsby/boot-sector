@@ -51,7 +51,8 @@ Output should look like so:
 - **Magic Number**: Last 2 bytes (512th & 512th) must be, respectively: x55, xaa
 
 **intructions**
-- **xe9** - jump (*jmp*) - *xfffd* = offset -3, i.e., jump to jump (xe0), i.e., to itself
+- **xe9** - *jmp* - long jump (+/-32KB) - *xfffd* = offset -3, i.e., jump to jump (xe0), i.e., to itself
+- **xeb** - *jmp* - short jump +/-128
 
 **Register mov's**
 - **ah** (**ax** high byte) - xb4
