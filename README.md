@@ -9,6 +9,35 @@ Download NASM from [here](http://www.nasm.us/) > Assembler.
 
 Download GnuWin32 CoreUtils from [here](http://gnuwin32.sourceforge.net/packages/coreutils.htm) > For tools like *od* (Octal dump).
 
+## Run with Bathc
+**Run from Command Prompt**
+```
+run «assemblyFileNameWithoutExtension»
+```
+**Run from Powershell**
+```
+./run «assemblyFileNameWithoutExtension»
+```
+
+**Convert from Command Prompt**
+```
+convert «binFileNameWithoutExtension» [format]
+```
+**Convert from Powershell**
+```
+./convert «binFileNameWithoutExtension» [format]
+```
+- defautl format is *vdi*. Accepted formats are:
+
+|Name|Parameter|
+|-|-|
+|QCOW2 (KVM, Xen)|qcow2|
+|QED (KVM)|qed|
+|raw|raw|
+|VDI (VirtualBox)|vdi|
+|VHD (Hyper-V)|vpc|
+|VMDK (VMware)|vmdk|
+
 ## Run emulator with boot image by running:
 
 ```
