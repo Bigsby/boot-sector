@@ -39,7 +39,18 @@ Output should look like so:
 
 - *\** > zeros omitted for brevity)
 
+## Convert raw disk image to VirtualBox .vdi
+```
+qemu-img convert -f raw -O vdi «filename».bin «filename».vdi
+```
 
+In **VirtualBox**:
+1. Create new Virtual Machine
+2. Type: *Other*
+3. Version: *Other/Unknow*
+   
+   ...
+4. *Use an existing virtual hard disk file* and select the generated file.
 
 
 # Notes
@@ -50,15 +61,8 @@ Output should look like so:
  - **Size**: 512b
 - **Magic Number**: Last 2 bytes (512th & 512th) must be, respectively: x55, xaa
 
-**intructions**
-- **xe9** - *jmp* - long jump (+/-32KB) - *xfffd* = offset -3, i.e., jump to jump (xe0), i.e., to itself
-- **xeb** - *jmp* - short jump +/-128
-
-**Register mov's**
-- **ah** (**ax** high byte) - xb4
-- **al** (**ax** low byte) - xb0
-
-**ISR** - Interrupt Service Routing - xcd x10
+**ISR** - Interrupt Service Routing 
+- **xcd x10**, **int 0x10** - screen - with **mov ah**, 0x0e - for *scrolling teletype*
 
 **Memory after boot is loaded**
 - x0 - (BIOS) Interrupt Ver - 1024B
@@ -71,14 +75,55 @@ Output should look like so:
 - xC0000 - BIOS - 256KB
 - x100000 and on- Free
 
+
+# CPU intructions
+
+- **xe9** - *jmp* - long jump (+/-32KB) - *xfffd* = offset -3, i.e., jump to jump (xe0), i.e., to itself
+- **xeb** - *jmp* - short jump +/-128
+- **db** - declare byte(s) of data
+
+**Register mov's**
+- **ax**
+- **bh** (**bx** high byte) - xb4
+- **al** (**ax** low byte) - xb0
+
+**Accessing value**
+- **[address]** - get value at address (pointer)
+
+**Stack**
+- **push** - add to *stack*
+- **pop** - remove from *stack*
+- **bp** - address of base of *stack*
+- **sp** - address of top of *stack* (lower than **bp**)
+
+**Cotnrol Structures**
+- **cmp**
+- **je** target - jump if equal (i.e. x == y) 
+- **jne** target - jump if not equal (i.e. x != y) 
+- **jl** target - jump if less than (i.e. x < y) 
+- **jle** target - jump if less than or equal (i.e. x <= y) 
+- **jg** target - jump if greater than (i.e. x > y) 
+- **jge** target - jump if greater than or equal (i.e. x >= y)
+
+**Functions**
+- **ip** - instruction pointer - where *CPU* store the current instrunction address - **Not accessible**
+- **call** - jump to a label setting **ip**
+- **ret** - jump to back from **call** to next address after **call**
+- **pusha** - push registers to *stack*
+- **popa** - pop back registers from *stack*
+
 # References
 
 **Doc**
 
-www.cs.bham.ac.uk/~exr/lectures/opsys/10_11/lectures/os-dev.pdf
+http://www.cs.bham.ac.uk/~exr/lectures/opsys/10_11/lectures/os-dev.pdf
 
 
 **x86 op codes**
 
 http://ref.x86asm.net/coder32.html
+
+**Convert image files**
+https://docs.openstack.org/image-guide/convert-images.html
+
 
