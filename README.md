@@ -155,4 +155,11 @@ http://ref.x86asm.net/coder32.html
 **Convert image files**
 https://docs.openstack.org/image-guide/convert-images.html
 
+**Online converter**
+http://www.rapidtables.com/code/text/ascii-table.htm
 
+**Registers**
+https://www.csc.depauw.edu/~bhoward/asmtut/asmtut2.html
+
+**Intel & AT&T Syntax**
+http://www.imada.sdu.dk/Courses/DM18/Litteratur/IntelnATT.htm
