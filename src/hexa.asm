@@ -1,14 +1,11 @@
-[org 0x7c00]                    ; Tell the assembler where this code will be loaded
+[org 0x7c00]                            ; Tell the assembler where this code will be loaded
 
-mov bx, WELCOME_MESSAGE
-call print_string
+mov dx, 0x1fb6                          ; store the value to print in dx 
+call print_hex                          ; call the function
 
-mov dx, 0x1fb6              ; store the value to print in dx 
-call print_hex              ; call the function
-
-mov bx, HEX_OUT             ; print the string pointed to 
-call print_string           ; by BX ret
-; prints the value of DX as hex. 
+mov bx, HEX_OUT                         ; print the string pointed to 
+call print_string                       ; by BX ret
+                                        ; prints the value of DX as hex. 
 
 
 ; TODO: manipulate chars at HEX_OUT to reflect DX
@@ -20,91 +17,35 @@ jmp $                           ; Hang
 print_hex: 
     pusha
 
-    mov si, HEX_OUT+2         ; si points to the target buffer
-    mov ax, dx              ; ax contains the number we want to convert
-    mov bx, ax          ; store a copy in bx
-    xor dx, dx          ; dx will contain the result
-    mov cx, 2           ; cx's our counter
+    mov si, HEX_OUT+5                   ; si printing pointer starting from the end
+    mov bx, dx                          ; store value in bx
+    mov cx, 4                           ; start counter to iterate for times for each digit
 
-    convert_loop:
-        mov ax, bx          ; load the number into ax
-        and ax, 0fh         ; we want the first 4 bits
-        cmp ax, 9h          ; check what we should add
-        ja  greater_than_9
-        add ax, 30h         ; 0x30 ('0')
-        jmp converted
+    print_hex_loop:
+        mov ax, bx                      ; move current value to ax
+        and ax, 0fh                     ; zero every bit expect the last 4
+        cmp ax, 9h                      ; check if it greater that 9, i.e., a letter
+        ja print_hex_is_letter
+        add ax, 030h                    ; 30h is ASCII '0'
+        jmp print_hex_process
+    
+    print_hex_is_letter:
+        add ax, 057h                    ; 61h is 'a' - (minus) ah is 57h
 
-    greater_than_9:
-        add ax, 61h         ; or 0x61 ('a')
-
-    converted:
-        xchg    al, ah      ; put a null terminator after it
-        mov [si], ax        ; (will be overwritten unless this
-        inc si              ; is the last one)
-
-        shr bx, 4           ; get the next part
-        dec cx              ; one less to do
-        jnz convert_loop
-
-        sub di, 4           ; di still points to the target buffer
+    print_hex_process:
+        mov [si], al                    ; print current character in si position
+        dec si                          ; decrement si to print in the previous position
+        shr bx, 4                       ; shift bx to the right 4 bits for the next 4 bits
+        dec cx                          ; decrement the counter
+        jnz print_hex_loop              ; go to start of loop if counter is not 0
 
     popa
     ret
 
 ; global variables 
 HEX_OUT:
-    db "0x0000", 0
-
-WELCOME_MESSAGE:
-    db "Welcome to converting", 0
+    db "0x0000", 0                      ; printing template
 
 ; Padding and magic number. 
 times 510-($-$$) db 0 
 dw 0xaa55
-
-
-; 1fb6
-; 0001 1111 1011 0110
-
-; 00110001 1 0001
-; 01100110 f 1111
-; 01100010 b 1011
-; 00110110 6 0110
-
-; character ; byte value ; wanted character
-; 1     >       0001    >       0011 0001
-; f     >       1111    >       0110 0110
-; b     >       1011    >       0110 0010
-; 6     >       0110    >       0011 0110
-
-; https://stackoverflow.com/questions/8194141/how-to-print-a-number-in-assembly-nasm
-
-
-
-;     mov si, ???         ; si points to the target buffer
-;     mov ax, 0a31fh      ; ax contains the number we want to convert
-;     mov bx, ax          ; store a copy in bx
-;     xor dx, dx          ; dx will contain the result
-;     mov cx, 3           ; cx's our counter
-
-; convert_loop:
-;     mov ax, bx          ; load the number into ax
-;     and ax, 0fh         ; we want the first 4 bits
-;     cmp ax, 9h          ; check what we should add
-;     ja  greater_than_9
-;     add ax, 30h         ; 0x30 ('0')
-;     jmp converted
-
-; greater_than_9:
-;     add ax, 61h         ; or 0x61 ('a')
-
-; converted:
-;     xchg    al, ah      ; put a null terminator after it
-;     mov [si], ax        ; (will be overwritten unless this
-;     inc si              ; is the last one)
-
-;     shr bx, 4           ; get the next part
-;     dec cx              ; one less to do
-;     jnz convert_loop
-
-;     sub di, 4           ; di still points to the target buffer

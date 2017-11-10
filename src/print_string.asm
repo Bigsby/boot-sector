@@ -3,7 +3,7 @@ print_string:
 
     mov ah, 0x0e                    ; set scrolling teletype
 
-    start_lopp:
+    print_string_start_loop:
 
         mov al, [bx]                ; set al to the value in bx address
         
@@ -13,12 +13,12 @@ print_string:
         int 0x10                    ; call BIOS interrupt
         
         add bx, word 1              ; move to next bx address
-        jmp start_lopp              ; jump to start of loop
+        jmp print_string_start_loop ; jump to start of loop
 
     print_string_return:
-    mov al, 13                      ; carriage return
+    mov al, 0dh                      ; carriage return
     int 0x10
-    mov al, 10                      ; new line
+    mov al, 0ah                      ; new line
     int 0x10
 
     popa
