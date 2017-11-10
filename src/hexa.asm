@@ -30,7 +30,7 @@ print_hex:
         jmp print_hex_process
     
     print_hex_is_letter:
-        add ax, 057h                    ; 61h is 'a' - (minus) ah is 57h
+        add ax, 061h - 0ah                    ; 61h is 'a' - ah the minimum value of ax
 
     print_hex_process:
         mov [si], al                    ; print current character in si position
