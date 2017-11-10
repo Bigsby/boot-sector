@@ -41,7 +41,7 @@ convert «binFileNameWithoutExtension» [format]
 ## Run emulator with boot image by running:
 
 ```
-qemu-system-x86_64 -drive format=raw,file=«imageFile»
+qemu-system-i386 -drive format=raw,file=«imageFile»
 ```
 *Ctrl+C* on calling console to terminate.
 
@@ -86,12 +86,21 @@ In **VirtualBox**:
 
 **BIOS** - Basic Input/Output Software
 
+**CHS** - Cylinder-Head-Sector - *Hard Disk Drives* access scheme
+
+**GDT** - Global Descriptor Table - Where memory segments and their protection level is defined for 32bit *protected* mode
+- Contains **SD** - Segment descriptors 
+
+**VGA** - Video Graphics Array - The graphic mode computers boot on (80x25 characters in text mode).
+
 **Boot Sector**
  - **Size**: 512b
 - **Magic Number**: Last 2 bytes (512th & 512th) must be, respectively: x55, xaa
 
 **ISR** - Interrupt Service Routing 
-- **xcd x10**, **int 0x10** - screen - with **mov ah**, 0x0e - for *scrolling teletype*
+**int** (e.g., **int 0x10**)
+- **int 0x10** - Screen (with **mov ah**, 0x0e - for *scrolling teletype*)
+- **int 0x13** - Disk (with **mov al**, 0x02 - for BIOS read sector)
 
 **Memory after boot is loaded**
 - x0 - (BIOS) Interrupt Ver - 1024B
@@ -104,7 +113,6 @@ In **VirtualBox**:
 - xC0000 - BIOS - 256KB
 - x100000 and on- Free
 
-
 # CPU intructions
 
 - **xe9** - *jmp* - long jump (+/-32KB) - *xfffd* = offset -3, i.e., jump to jump (xe0), i.e., to itself
@@ -115,6 +123,10 @@ In **VirtualBox**:
 - **ax**
 - **bh** (**bx** high byte) - xb4
 - **al** (**ax** low byte) - xb0
+
+**Interrupts**
+- **int** - call interrupt
+- **cli** - clear interrupt (disable interrupts)
 
 **Accessing value**
 - **[address]** - get value at address (pointer)
@@ -147,6 +159,8 @@ In **VirtualBox**:
 
 http://www.cs.bham.ac.uk/~exr/lectures/opsys/10_11/lectures/os-dev.pdf
 
+**OSDev.org**
+http://wiki.osdev.org/Main_Page
 
 **x86 op codes**
 
@@ -160,6 +174,12 @@ http://www.rapidtables.com/code/text/ascii-table.htm
 
 **Registers**
 https://www.csc.depauw.edu/~bhoward/asmtut/asmtut2.html
+http://www.eecg.toronto.edu/~amza/www.mindsec.com/files/x86regs.html
 
 **Intel & AT&T Syntax**
 http://www.imada.sdu.dk/Courses/DM18/Litteratur/IntelnATT.htm
+
+**BIOS Video Modes**
+http://www.wagemakers.be/english/doc/vga
+http://wiki.osdev.org/Category:Video
+
